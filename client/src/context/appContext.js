@@ -92,8 +92,6 @@ const userLocation = localStorage.getItem("location"); Retrieves the "location"
     searchType: "all",
     sort:"latest",
     sortOptions:['latest', 'oldest', 'a-z', 'z-a']
-
-
 }
 
 //create Context
@@ -110,7 +108,7 @@ const userLocation = localStorage.getItem("location"); Retrieves the "location"
    const [state, dispatch]=useReducer(reducer, initialState);
     //axios
    const axiosInstance = axios.create({
-    baseURL: 'http://localhost:5000/api/v1', // Replace with your API base URL
+    baseURL: '/api/v1', // Replace with your API base URL
    
   });
   //request
