@@ -1,4 +1,4 @@
-
+import main from "../assets/images/main.svg"
 import Wrapper from "../assets/wrappers/LandingPage.js"
 import { BlueLogo } from "../components"
 import { Link } from "react-router-dom"
@@ -29,7 +29,7 @@ Lorem Ipsum is simply dummy text of the printing
        Login/Register
       </Link>
                 </div>
- 
+  <img src={main} alt="job hunt" className="img main-img"/>
             </div>
         </Wrapper>
     )
