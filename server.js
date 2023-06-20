@@ -11,9 +11,6 @@ import helmet from "helmet"
 import xss from "xss-clean"
 import ExpressMongoSanitize from "express-mongo-sanitize";
 
-
-
-import cors from "cors"
 const app=express();
 
 
@@ -49,10 +46,6 @@ const corsOptions = {
 if (process.env.NODE_ENV !== "production"){
 app.use(morgan("dev"))
 }
-
-// Enable CORS for all routes
-app.use(cors());
-//app.use(cors(corsOptions));
 
 const __dirname=dirname(fileURLToPath(import.meta.url))
 /*obtains the directory name of the current module file and
