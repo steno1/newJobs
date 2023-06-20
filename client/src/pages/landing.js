@@ -1,4 +1,4 @@
-import main from "../assets/images/main.svg"
+
 import Wrapper from "../assets/wrappers/LandingPage.js"
 import { BlueLogo } from "../components"
 import { Link } from "react-router-dom"
@@ -25,11 +25,11 @@ Lorem Ipsum is simply dummy text of the printing
      with desktop publishing software like Aldus PageMaker
       including versions of Lorem Ipsum.   
                     </p>
-                    <Link to="/register" className="btn btn-hero">
-                        Login/Register
-                    </Link>
+     <Link to="/register" className="btn btn-hero">
+       Login/Register
+      </Link>
                 </div>
-                <img src={main} alt="job hunt" className="img main-img"/>
+ 
             </div>
         </Wrapper>
     )
