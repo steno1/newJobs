@@ -45,10 +45,6 @@ const corsOptions = {
   }
 };  */
 
-app.get('/', function(req, res) {
-  res.setHeader('Content-Type', 'application/json');
-  // ... rest of your code ...
-});
 
 if (process.env.NODE_ENV !== "production"){
 app.use(morgan("dev"))
