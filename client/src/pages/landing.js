@@ -1,4 +1,5 @@
-import main from "../assets/images/main.svg"
+//import main from "../assets/images/main.svg"
+import undraw from "../assets/images/undraw_Interview.png"
 import Wrapper from "../assets/wrappers/LandingPage.js"
 import { BlueLogo } from "../components"
 import { Link } from "react-router-dom"
@@ -10,7 +11,7 @@ function Landing(){
             </nav>
             <div className="container page">
                 <div className="info">
-                    <h1>Job<span>tracking</span>app</h1>
+                    <h1>Job<span>Finding</span>app</h1>
                     <p>
                     What is Lorem Ipsum?
 Lorem Ipsum is simply dummy text of the printing
@@ -29,7 +30,7 @@ Lorem Ipsum is simply dummy text of the printing
        Login/Register
       </Link>
                 </div>
-  <img src={main} alt="job hunt" className="img main-img"/>
+  <img src={undraw} alt="job hunt" className="img main-img"/>
             </div>
         </Wrapper>
     )

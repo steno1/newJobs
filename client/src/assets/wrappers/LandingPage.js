@@ -8,6 +8,9 @@ const Wrapper = styled.main`
     height: var(--nav-height);
     display: flex;
     align-items: center;
+    margin-top: 5px;
+    
+    
   }
   .page {
     min-height: calc(100vh - var(--nav-height));
@@ -18,7 +21,7 @@ const Wrapper = styled.main`
   h1 {
     font-weight: 700;
     span {
-      color: var(--primary-500);
+      color: #617A55;
     }
   }
   p {
@@ -35,6 +38,7 @@ const Wrapper = styled.main`
     .main-img {
       display: block;
     }
+    background-color: #FFEAD2;
   }
 `
 export default Wrapper

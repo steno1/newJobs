@@ -70,7 +70,7 @@ html {
 }
 
 body {
-  background: var(--backgroundColor);
+  background: #FFEAD2;
   font-family: var(--bodyFont);
   font-weight: 400;
   line-height: 1.75;
@@ -149,7 +149,7 @@ ul {
 .btn {
   cursor: pointer;
   color: var(--white);
-  background: var(--primary-500);
+  background: #8EAC50;
   border: transparent;
   border-radius: var(--borderRadius);
   letter-spacing: var(--letterSpacing);
