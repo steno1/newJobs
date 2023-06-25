@@ -1,5 +1,7 @@
 App Documentation
+
 Introduction
+
 This documentation provides an overview of findJobApp, including its features, functionality, and technical implementation.
 The app allows users to create and manage profiles, add job listings, view their own job listings, search for jobs, and track job statistics.
 It includes authentication and security features, utilizes context API for state management, and employs various libraries and technologies for enhanced functionality.
