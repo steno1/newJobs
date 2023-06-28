@@ -5,3 +5,6 @@ class CustomApiError extends Error {
     }
 }
 export default CustomApiError;
+
+/* customApiError is an instance of Error from
+ throw new  in authController*/

@@ -24,7 +24,7 @@ const Register=()=>{
 
   //change anytime something in input is typed
   const {user, isLoading, showAlert, displayAlert,
-  registerUser, loginUser, setupUser
+    setupUser
   }=useAppContext();
   /* 
   The useAppContext hook is used to access the global
@@ -42,7 +42,7 @@ const Register=()=>{
   
   
   const handleChange=(e)=>{
-    console.log(e.target)//shows input we are working on
+    //console.log(e.target)//shows input we are working on
   setValues({
     ...values,//get current value in the state
     [e.target.name]:e.target.value//we use dynamic object, javascript
@@ -90,6 +90,7 @@ if(user){
         <Wrapper className="full-page">
 <form className="form" 
 onSubmit={handleSubmit}>
+
 <div className="findLogo">
 <BlueLogo/>
 </div>
@@ -119,10 +120,7 @@ onSubmit={handleSubmit}>
    
 />
 
-
-<button type="submit" 
-className="btn btn-block"
-disabled={isLoading}>
+<button type="submit" className="btn btn-block" disabled={isLoading}>
     Submit
 </button>
 <p>

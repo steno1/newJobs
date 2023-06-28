@@ -1,16 +1,11 @@
 import React from "react";
 import { Landing, Register, Error, ProtectedRoutes } from "./pages";
-import {
-  BrowserRouter,
-  Routes,
-  Route
-  
-} from "react-router-dom";
-import {AddJob, AllJobs, ProFile, SharedLayout, Stats}
- from "./pages/dashBoard";
+import {AddJob, AllJobs, ProFile, SharedLayout, Stats}from "./pages/dashBoard";
+import {BrowserRouter,Routes,Route} from "react-router-dom";
 
 function App() {
-  return (<>
+  return (
+  <>
    <BrowserRouter>
    
     <Routes>

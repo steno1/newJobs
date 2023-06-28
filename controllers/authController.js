@@ -21,11 +21,12 @@ import {BadRequestError, UnAuthenticatedError} from "../errors/index.js";
 
 const register =async(req, res)=>{
     const {name, email, password}=req.body;
-    //i used "express-async-error" package for Authentication
+    
     
     if(!name|| !email || !password ){
         throw new BadRequestError("Please provide all the compulsory field")
     }
+    
     const userAlreadyExist= await User.findOne({
        email 
     })
@@ -36,12 +37,12 @@ throw new BadRequestError("Email already in use")
         {name,email,password}
     )
     const token = user.createJWT();
-    res.status(StatusCodes.CREATED).json({ user:{
+    res.status(StatusCodes.CREATED).json({user:{
         email:user.email,
         lastName:user.lastName,
         location:user.location,
         name:user.name
-    }, token })
+    }, token})
   
 }
 

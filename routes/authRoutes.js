@@ -1,8 +1,7 @@
 /* 
 In the context of React and Node.js, routes refer to 
 the mapping of URLs (Uniform Resource Locators)
- to specific actions or
- components within an application.
+ to specific actions or components within an application.
  In Node.js, routes are typically defined using a framework 
  such as Express. Express allows you to define routes for your
 application by specifying the HTTP method (such as GET or POST),
@@ -23,11 +22,9 @@ const apilimiter = rateLimiter({
      message:"Too many request from this Ip address, please try again after 15 minutes"
    });
 
-import { register,
-     login,
-      update
-     } from "../controllers/authController.js";
-     import authenticateUser from '../middleware/auth.js';
+import { register,login, update} from "../controllers/authController.js";
+
+import authenticateUser from '../middleware/auth.js';
 
 //set up routers
 

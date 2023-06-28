@@ -34,10 +34,10 @@ validate: {
   
 unique:true},
 /* documentation on not passing password to frontend
- https://mongoosejs.com/docs/api/schematype.html#SchemaType
-.prototype.select()*/
+ https://mongoosejs.com/docs/api/schematype.html#SchemaType.prototype.select()*/
 password:{type:String,
    required:[true, "please provide password"],
+   minlength: 4,
   
  select:false//remove from being passed to frontend
 },
@@ -59,10 +59,13 @@ UserSchema.pre('save', async function() {
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
 });
+
+
 //https://mongoosejs.com/docs/guide.html#methods
 UserSchema.methods.createJWT=function(){
   return jwt.sign({userId:this._id},
     process.env.JWT_SECRET,
+    //all key generator site for secret generation
     
     {
     expiresIn:process.env.JWT_LIFETIME

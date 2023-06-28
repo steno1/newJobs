@@ -190,7 +190,7 @@ that removes the "token," "user,"
 and "location" values from the browser's localStorage.
 */
        const setupUser=async ({currentUser, endPoint, alertText})=>{
-    
+    //currentUser, endPoint, alertText were prop from register page
     
         dispatch({
             type:SETUP_USER_BEGIN
@@ -199,19 +199,33 @@ and "location" values from the browser's localStorage.
            const {data}=await axiosInstance.post
            (`/auth/${endPoint}`,
             currentUser);
-           
+  /* The function makes an asynchronous HTTP POST request using
+   axiosInstance.post. The request is sent to a specific endpoint
+   (/login or / register) generated based  on the value of endPoint.
+   The currentUser object is sent as the request payload.  */          
            
            const {user, token, location }=data;
+ /* After receiving the response from the server, the function
+  extracts the data property from the response object using
+   destructuring. This data object is expected to contain properties
+    such as user, token, and location.*/          
            
            dispatch({
             type:SETUP_USER_SUCCESS,
             payload:{
                 user, token, location, alertText
             }
+/* After successfully obtaining the user, token, location,
+ and alertText from the response data, the function dispatches 
+an action of type SETUP_USER_SUCCESS to the reducer. */            
            })
            addUserToLocalStorage({user, token, location});
           
         } catch (error) {
+/* error: This is the error object that is caught when the 
+HTTP request encounters an error. It contains information 
+about the error,such as the response data, status code, and
+ error message.*/            
             
             dispatch({
                 type:SETUP_USER_ERROR,

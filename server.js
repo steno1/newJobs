@@ -28,20 +28,6 @@ import authenticateUser from "./middleware/auth.js";
 import notFoundMiddleware from "./middleware/not_found.js";
 import errorHandlerMiddleWare from "./middleware/error_handler.js";
 
-//const allowedOrigins = ['http://localhost:3000', 'http://localhost:5000']; // Replace with your frontend URL
-
-/*
-const corsOptions = {
-  origin: (origin, callback) => {
-    // Check if the origin is in the allowed origins list
-    if (allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  }
-};  */
-
 
 if (process.env.NODE_ENV !== "production"){
 app.use(morgan("dev"))

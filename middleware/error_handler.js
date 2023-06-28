@@ -5,8 +5,13 @@ const errorHandlerMiddleWare=(err, req, res, next)=>{
     
     const defaultError = {
         statusCode:err.statusCode|| StatusCodes.INTERNAL_SERVER_ERROR,
+        // statusCode:err.statusCode from basRequestError.js
         msg: err.message || "Something went wrong, try later"
+       /*msg: err.message  from throw new BadRequestError
+       ("Please provide all the compulsory field")in error_handler.js
+        */ 
     }
+/* err.message is from register controller*/
     if (err.name === 'ValidatorError'){
         defaultError.statusCode=StatusCodes.BAD_REQUEST;
        // defaultError.msg=err.message

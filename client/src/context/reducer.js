@@ -4,8 +4,9 @@
 complex state in a centralized store, similar to how
  Redux works.*/
 
-import { DISPLAY_ALERT, CLEAR_ALERT,
-
+import { 
+    DISPLAY_ALERT,
+     CLEAR_ALERT,
 SETUP_USER_BEGIN,
 SETUP_USER_SUCCESS,
 SETUP_USER_ERROR,
