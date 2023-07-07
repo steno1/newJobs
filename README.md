@@ -8,16 +8,16 @@ The app allows users to create and manage profiles, add job listings, view their
 It includes authentication and security features, utilizes context API for state management, and employs various libraries and technologies for enhanced functionality.
 
    Table of Contents
-   Requirements
-   Installation
-   Architecture
-   Features
-   API Endpoints
-   Authentication
-   Error Handling
-   Pagination
-   Security
-   State Management
+   Requirements.
+   Installation.
+   Architecture.
+   Features.
+   API Endpoints.
+   Authentication.
+   Error Handling.
+   Pagination.
+   Security.
+   State Management.
    
 Requirements;
 To run the application, ensure you have the following dependencies installed:
