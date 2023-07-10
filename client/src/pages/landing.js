@@ -13,7 +13,7 @@ function Landing(){
             </nav>
             <div className="container page">
                 <div className="info">
-                    <h1>Job<span>Finding</span>app</h1>
+                    <h1>Track<span>Job</span>app</h1>
                     <p>
                     Find, Track, and Succeed with TrackJobApp
 
