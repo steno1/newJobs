@@ -1,435 +1,388 @@
-/*
-In the context of React, the Context API is a feature 
-that allows data to be shared and accessed across multiple
- components without the need to pass props explicitly through 
- the component tree. It provides a way to create a global state
-  that can be accessed by any component within a React application.
+import {
+  CHANGE_PAGE,
+  CLEAR_ALERT,
+  CLEAR_FILTER,
+  CLEAR_VALUES,
+  CREATE_JOB_BEGIN,
+  CREATE_JOB_ERROR,
+  CREATE_JOB_SUCCESS,
+  DELETE_JOB_BEGIN,
+  DISPLAY_ALERT,
+  EDIT_JOB_BEGIN,
+  EDIT_JOB_ERROR,
+  EDIT_JOB_SUCCESS,
+  GET_JOB_BEGIN,
+  GET_JOB_SUCCESS,
+  HANDLE_CHANGE,
+  LOGOUT_USER,
+  SETUP_USER_BEGIN,
+  SETUP_USER_ERROR,
+  SETUP_USER_SUCCESS,
+  SET_EDIT_JOB,
+  SHOW_STAT_BEGIN,
+  SHOW_STAT_SUCCESS,
+  TOGGLE_SIDEBAR,
+  UPDATE_USER_BEGIN,
+  UPDATE_USER_ERROR,
+  UPDATE_USER_SUCCESS
+} from "./actions";
+import React, { createContext, useContext, useReducer } from "react";
 
-The Context API consists of two main components: the context provider
- and the context consumer. The provider component is responsible for 
- defining the data that will be made available to the consuming
-  components. It wraps around the part of the component tree where
- the data is needed. The consumer component, on the other hand,
- is used by the components that want to access the data provided by
-  the context provider.
-*/
-import React from "react";
-import { useReducer, useContext} from "react";
-import axios from "axios"
+import axios from "axios";
 import reducer from "./reducer";
-import { DISPLAY_ALERT,
-     CLEAR_ALERT,
-     SETUP_USER_BEGIN,
-      SETUP_USER_SUCCESS,
-       SETUP_USER_ERROR,
-       TOGGLE_SIDEBAR,
-       LOGOUT_USER, 
-       UPDATE_USER_BEGIN,
-       UPDATE_USER_SUCCESS,
-       UPDATE_USER_ERROR,
-       HANDLE_CHANGE,
-       CLEAR_VALUES,
-       CREATE_JOB_BEGIN,
-       CREATE_JOB_SUCCESS,
-       CREATE_JOB_ERROR,
-       GET_JOB_BEGIN,
-       GET_JOB_SUCCESS,
-       SET_EDIT_JOB,
-       DELETE_JOB_BEGIN,
-       EDIT_JOB_BEGIN,
-        EDIT_JOB_SUCCESS,
-        EDIT_JOB_ERROR, 
-        SHOW_STAT_BEGIN,
-        SHOW_STAT_SUCCESS, 
-        CLEAR_FILTER,
-        CHANGE_PAGE
- } from "./actions";
 
-const token=localStorage.getItem("token");
-/* 
+// Retrieve user-related values from localStorage
 const token = localStorage.getItem("token");
- Retrieves the "token" value 
-from the browser's localStorage.
-*/
-const user=localStorage.getItem("user")
-/* 
-const user = localStorage.getItem("user"); Retrieves the "user"
- value from the browser's localStorage.
+const user = localStorage.getItem("user");
+const userLocation = localStorage.getItem("location");
 
-*/
-const userLocation=localStorage.getItem("location")
-/* 
-const userLocation = localStorage.getItem("location"); Retrieves the "location"
- value from the browser's localStorage.*/
+// Define the initial state for the application
+const initialState = {
+  isLoading: false,
+  showAlert: false,
+  alertText: "",
+  alertType: "",
+  user: user ? JSON.parse(user) : null,
+  token: token,
+  userLocation: userLocation || "",
+  isEditing: false,
+  editingJobId: "",
+  position: "",
+  company: "",
+  jobLocation: userLocation || "",
+  jobTypeOptions: ["Full-time", "Part-time", "Remote", "Internship"],
+  jobType: "Full-time",
+  showSideBar: false,
+  statusOptions: ["Interview", "Declined", "Pending"],
+  status: "Pending",
+  jobs: [],
+  totalJobs: 0,
+  numOfPages: 1,
+  page: 1,
+  stats: {},
+  monthlyApplications: [],
+  search: "",
+  searchStatus: "all",
+  searchType: "all",
+  sort: "latest",
+  sortOptions: ["latest", "oldest", "a-z", "z-a"]
+};
 
- const initialState={
-    isLoading:false,
-    showAlert:false,
-    alertText:"",
-    alertType:"",
-    user: user? JSON.parse(user): null,
-    token:token, 
-    //jobs
-    userLocation:userLocation || '',
-    isEditing:false,
-    editingJobId:'',
-    position:"",
-    company:"",
-    jobLocation:userLocation || '',
-    jobTypeOptions:["Full-time", "Part-time", "Remote", "Internship"],
-    jobType:"Full-time",
-    showSideBar:false,
-    statusOptions: ["Interview", "Declined", "Pending"],
-    status:"Pending",
-    jobs:[],
-    totalJobs:0,
-    numOfPages:1,  
-    page:1, 
-    stats:{},
-    monthlyApplications:[],
-    search:"",
-    searchStatus:"all",
-    searchType: "all",
-    sort:"latest",
-    sortOptions:['latest', 'oldest', 'a-z', 'z-a']
-}
+// Create the AppContext
+const AppContext = createContext();
 
-//create Context
- const AppContext=React.createContext(); //creates a new context object
- const AppProvider=({children})=>{
-    /*useReducer: It is a hook from React that allows you 
-    to manage state using the reducer pattern. It takes a
-     reducer function and an initial state as arguments and
-      returns an array with  the current state and a
-       dispatch function. 
-    
-    */
-  
-   const [state, dispatch]=useReducer(reducer, initialState);
-    //axios
-   const axiosInstance = axios.create({
-    baseURL: '/api/v1', // Replace with your API base URL
-   
+// Create the AppProvider component
+const AppProvider = ({ children }) => {
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  // Create an instance of axios for API requests
+  const axiosInstance = axios.create({
+    baseURL: "/api/v1",
   });
-  //request
-  axiosInstance.interceptors.request.use((config)=>{
-    config.headers['Authorization']=`Bearer ${state.token}`
-    
-    return config
-  },
-  
-  (error)=>{
-    return Promise.reject(error)
-  })
-  //response
-  axiosInstance.interceptors.response.use((response)=>{
-    
-    return response
-  },
-  
-  (error)=>{
-    console.log(error.response)
-    if(error.response.status===401){
-      logOutUser(); 
+
+  // Add request interceptors
+  axiosInstance.interceptors.request.use(
+    (config) => {
+      config.headers["Authorization"] = `Bearer ${state.token}`;
+      return config;
+    },
+    (error) => {
+      return Promise.reject(error);
     }
-    return Promise.reject(error)
-  })
+  );
 
-    
-    /* reducer: It is a separate file that contains
-     the reducer function responsible for updating 
-    the state based on dispatched actions.*/
-    /* 
-    const [state, dispatch] = useReducer(reducer, initialState);
-    Uses the useReducer hook to manage state. It takes the 
-    "reducer" function and the "initialState" as arguments and
-     returns the current state and a dispatch function. 
-     The "state" will hold the current state value, and "dispatch"
-     will be used to dispatch actions to update the state.
-    
-    */
+  // Add response interceptors
+  axiosInstance.interceptors.response.use(
+    (response) => {
+      return response;
+    },
+    (error) => {
+      if (error.response.status === 401) {
+        logOutUser();
+      }
+      return Promise.reject(error);
+    }
+  );
 
-    //different actions is being dispatched
-   const displayAlert=()=>{
-    dispatch({
-        type:DISPLAY_ALERT
-    })
+  // Action: Display an alert
+  const displayAlert = () => {
+    dispatch({ type: DISPLAY_ALERT });
     clearAlert();
-   } 
+  };
 
-   const clearAlert=()=>{
-    setTimeout(()=>{
-        dispatch({
-            type:CLEAR_ALERT
-        }) 
-    }, 3000)
-   } 
-const addUserToLocalStorage=({user, token, location})=>{
-localStorage.setItem("user", JSON.stringify(user))
-localStorage.setItem("token", (token))
-localStorage.setItem("location",(location))
-}
+  // Action: Clear an alert after a certain time
+  const clearAlert = () => {
+    setTimeout(() => {
+      dispatch({ type: CLEAR_ALERT });
+    }, 3000);
+  };
 
-/* 
-const addUserToLocalStorage = ({ user, token, location }) =>
- { ... }: Defines a function called "addUserToLocalStorage" 
- that stores the "user," "token," and "location"
- values in the browser's localStorage.
-*/
+  // Action: Add user details to localStorage
+  const addUserToLocalStorage = ({ user, token, location }) => {
+    localStorage.setItem("user", JSON.stringify(user));
+    localStorage.setItem("token", token);
+    localStorage.setItem("location", location);
+  };
 
-const removeUserFromLocalStorage=()=>{
-localStorage.removeItem("token")
-localStorage.removeItem("user")
-localStorage.removeItem("location")
+  // Action: Remove user details from localStorage
+  const removeUserFromLocalStorage = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("location");
+  };
 
-}
-/* 
-const removeUserFromLocalStorage = () => { ... }: 
-Defines a function called "removeUserFromLocalStorage" 
-that removes the "token," "user," 
-and "location" values from the browser's localStorage.
-*/
-       const setupUser=async ({currentUser, endPoint, alertText})=>{
-    //currentUser, endPoint, alertText were prop from register page
-    
-        dispatch({
-            type:SETUP_USER_BEGIN
-        })
-        try {
-           const {data}=await axiosInstance.post
-           (`/auth/${endPoint}`,
-            currentUser);
-  /* The function makes an asynchronous HTTP POST request using
-   axiosInstance.post. The request is sent to a specific endpoint
-   (/login or / register) generated based  on the value of endPoint.
-   The currentUser object is sent as the request payload.  */          
-           
-           const {user, token, location }=data;
- /* After receiving the response from the server, the function
-  extracts the data property from the response object using
-   destructuring. This data object is expected to contain properties
-    such as user, token, and location.*/          
-           
-           dispatch({
-            type:SETUP_USER_SUCCESS,
-            payload:{
-                user, token, location, alertText
-            }
-/* After successfully obtaining the user, token, location,
- and alertText from the response data, the function dispatches 
-an action of type SETUP_USER_SUCCESS to the reducer. */            
-           })
-           addUserToLocalStorage({user, token, location});
-          
-        } catch (error) {
-/* error: This is the error object that is caught when the 
-HTTP request encounters an error. It contains information 
-about the error,such as the response data, status code, and
- error message.*/            
-            
-            dispatch({
-                type:SETUP_USER_ERROR,
-                payload:{
-                    msg:error.response.data.msg
-                }
-            })
-        }
-        clearAlert()
-           }
-//toggleSideBar
-const toggleSidebar=()=>{
-    dispatch({
-        type:TOGGLE_SIDEBAR
-    })
-}
-//logout user
-const logOutUser=()=>{
-    dispatch({
-        type:LOGOUT_USER })
-        removeUserFromLocalStorage();
-} 
+  // Action: Set up user (login or register)
+  const setupUser = async ({ currentUser, endPoint, alertText }) => {
+    dispatch({ type: SETUP_USER_BEGIN });
 
-
-//updateUser
- const updateUser=async (currentUser)=>{
-    dispatch({type:UPDATE_USER_BEGIN})
-try {
- const {data}=await axiosInstance.patch("/auth/update",currentUser)
-
- const {user, location, token}=data
-
- dispatch({type:UPDATE_USER_SUCCESS,
-payload:{user,location, token}})
-addUserToLocalStorage({user, location, token,})
- 
-} catch (error) {
-    if(error.response.status !==401){
-        dispatch({type:UPDATE_USER_ERROR,
-            payload:{msg:error.response.data.msg}
-            
-            })
-    }
-  
-}
-clearAlert();
-} 
-
-const handleChange=({name, value})=>{
-dispatch({type:HANDLE_CHANGE, 
-payload:{name, value}})
-}
-
-
-const clearValues=()=>{
-    dispatch({type:CLEAR_VALUES})
-}
-
-const createJob=async()=>{
-dispatch({type:CREATE_JOB_BEGIN});
-try {
-  const {position, company, jobLocation, jobType, status}=state;
-  await axiosInstance.post("/jobs",{
-position,
- company,
- jobLocation,
- jobType,
-  status
-  }) 
-  dispatch({type:CREATE_JOB_SUCCESS});
-  dispatch({type:CLEAR_VALUES})
-} catch (error) {
-   if(error.response.status===401)return
-   dispatch({type:CREATE_JOB_ERROR,
-payload:{
-    msg:error.response.data.message
-}}) 
-}
-
-}
-const getJob= async ()=>{
-    const {search, searchStatus, searchType, sort, page}=state
-    let url=`/jobs?page=${page}&status=${searchStatus}&jobType=${searchType}&sort=${sort}`
-    
-    //optionally, if search is not empty, add it to url
-if(search){
-url=url+ `&search=${search}`
-}
-
-dispatch({type:GET_JOB_BEGIN});
-try {
-   const {data}=await axiosInstance.get(url);
-   const {jobs, totalJobs, numOfPages}=data;
-   dispatch({type:GET_JOB_SUCCESS,
-    payload:{
-        jobs, totalJobs, numOfPages
-    }
-})
-
-} catch (error) {
-   // console.log(error.response)
-    //logOutUser
-    logOutUser();
-}
-clearAlert();
-}
-const setEditJob=(id)=>{
-dispatch({type:SET_EDIT_JOB,
-     payload:{id}
-    
-    })
-  
-}
-const editJob=async()=>{
-    dispatch({type:EDIT_JOB_BEGIN})
     try {
- const {position, company, jobLocation, jobType, status}=state
-     await axiosInstance.patch(`/jobs/${state.editingJobId}`, {
+      const { data } = await axiosInstance.post(`/auth/${endPoint}`, currentUser);
+      const { user, token, location } = data;
 
+      dispatch({
+        type: SETUP_USER_SUCCESS,
+        payload: {
+          user,
+          token,
+          location,
+          alertText
+        }
+      });
+
+      addUserToLocalStorage({ user, token, location });
+    } catch (error) {
+      dispatch({
+        type: SETUP_USER_ERROR,
+        payload: {
+          msg: error.response.data.msg
+        }
+      });
+    }
+
+    clearAlert();
+  };
+
+  // Action: Toggle the sidebar
+  const toggleSidebar = () => {
+    dispatch({ type: TOGGLE_SIDEBAR });
+  };
+
+  // Action: Log out the user
+  const logOutUser = () => {
+    dispatch({ type: LOGOUT_USER });
+    removeUserFromLocalStorage();
+  };
+
+  // Action: Update user details
+  const updateUser = async (currentUser) => {
+    dispatch({ type: UPDATE_USER_BEGIN });
+
+    try {
+      const { data } = await axiosInstance.patch("/auth/update", currentUser);
+      const { user, location, token } = data;
+
+      dispatch({
+        type: UPDATE_USER_SUCCESS,
+        payload: { user, location, token }
+      });
+
+      addUserToLocalStorage({ user, location, token });
+    } catch (error) {
+      if (error.response.status !== 401) {
+        dispatch({
+          type: UPDATE_USER_ERROR,
+          payload: { msg: error.response.data.msg }
+        });
+      }
+    }
+
+    clearAlert();
+  };
+
+  // Action: Handle form input change
+  const handleChange = ({ name, value }) => {
+    dispatch({ type: HANDLE_CHANGE, payload: { name, value } });
+  };
+
+  // Action: Clear form input values
+  const clearValues = () => {
+    dispatch({ type: CLEAR_VALUES });
+  };
+
+  // Action: Create a new job
+  const createJob = async () => {
+    dispatch({ type: CREATE_JOB_BEGIN });
+
+    try {
+      const { position, company, jobLocation, jobType, status } = state;
+
+      await axiosInstance.post("/jobs", {
         position,
         company,
         jobLocation,
         jobType,
         status
-     }) 
-     dispatch({type:EDIT_JOB_SUCCESS})
-     dispatch({type:CLEAR_VALUES})
-    } catch (error) {
-        if(error.response.status===401)return
-        dispatch({
-            type:EDIT_JOB_ERROR,
-            payload:{msg:error.response.data.msg}
-        })
-    }
-    clearAlert()
-}
+      });
 
-const deleteJob=async(jobId)=>{
-    dispatch({type:DELETE_JOB_BEGIN})
+      dispatch({ type: CREATE_JOB_SUCCESS });
+      dispatch({ type: CLEAR_VALUES });
+    } catch (error) {
+      if (error.response.status === 401) return;
+
+      dispatch({
+        type: CREATE_JOB_ERROR,
+        payload: {
+          msg: error.response.data.message
+        }
+      });
+    }
+  };
+
+  // Action: Get jobs
+  const getJob = async () => {
+    const { search, searchStatus, searchType, sort, page } = state;
+    let url = `/jobs?page=${page}&status=${searchStatus}&jobType=${searchType}&sort=${sort}`;
+
+    if (search) {
+      url = url + `&search=${search}`;
+    }
+
+    dispatch({ type: GET_JOB_BEGIN });
+
     try {
-        await axiosInstance.delete(`/jobs/${jobId}`)
-        getJob();
+      const { data } = await axiosInstance.get(url);
+      const { jobs, totalJobs, numOfPages } = data;
+
+      dispatch({
+        type: GET_JOB_SUCCESS,
+        payload: {
+          jobs,
+          totalJobs,
+          numOfPages
+        }
+      });
     } catch (error) {
-       // console.log(error.response)
-        //logOutUser()
-        logOutUser()
+      logOutUser();
     }
 
-    
- }
- 
- const showStats=async()=>{
-dispatch({type:SHOW_STAT_BEGIN })
-try {
-    const {data}=await axiosInstance(`/stats`)
+    clearAlert();
+  };
 
-    dispatch({type:SHOW_STAT_SUCCESS, payload:{
-        stats:data.defaultStats,//from job controller
-        monthlyApplications:data.monthlyApplications
-        
-    }})
-    
-} catch (error) {
-    //logOutUser()
-    logOutUser()
-    
-}
-clearAlert()
- }
+  // Action: Set the job to edit mode
+  const setEditJob = (id)=> {
+    dispatch({
+      type: SET_EDIT_JOB,
+      payload: {
+        id
+      }
+    });
+  };
 
- const clearFilters=()=>{
-dispatch({type:CLEAR_FILTER})
+  // Action: Edit a job
+  const editJob = async () => {
+    dispatch({ type: EDIT_JOB_BEGIN });
 
- }
+    try {
+      const { position, company, jobLocation, jobType, status } = state;
 
- const changePage=(page)=>{
-    dispatch({type:CHANGE_PAGE, payload:{page}})
- }
-    return (
-        <AppContext.Provider value={{
-            ...state,
-            displayAlert, clearAlert,
-             setupUser,toggleSidebar,
-              logOutUser, updateUser,
-               handleChange, clearValues,
-                createJob, getJob, 
-                setEditJob, deleteJob,
-                editJob, showStats, 
-                clearFilters, changePage
-        }}>
-        {children}
+      await axiosInstance.patch(`/jobs/${state.editingJobId}`, {
+        position,
+        company,
+        jobLocation,
+        jobType,
+        status
+      });
 
-        </AppContext.Provider>
-    )
-}
-/* The state object and other functions are passed as a value to the 
-AppContext.Provider component, making it available to all
- the components that are descendants of the AppProvider component:*/
+      dispatch({ type: EDIT_JOB_SUCCESS });
+      dispatch({ type: CLEAR_VALUES });
+    } catch (error) {
+      if (error.response.status === 401) return;
 
-//custom hook
- const useAppContext=()=>{
-    //useContext is from react
-    //we can then be able to access our state by passing AppContext
-    return useContext(AppContext)
-}
+      dispatch({
+        type: EDIT_JOB_ERROR,
+        payload: {
+          msg: error.response.data.msg
+        }
+      });
+    }
 
-export{AppProvider, initialState, useAppContext}
+    clearAlert();
+  };
+
+  // Action: Delete a job
+  const deleteJob = async (jobId) => {
+    dispatch({ type: DELETE_JOB_BEGIN });
+
+    try {
+      await axiosInstance.delete(`/jobs/${jobId}`);
+      getJob();
+    } catch (error) {
+      logOutUser();
+    }
+  };
+
+  // Action: Show job statistics
+  const showStats = async () => {
+    dispatch({ type: SHOW_STAT_BEGIN });
+
+    try {
+      const { data } = await axiosInstance(`/stats`);
+
+      dispatch({
+        type: SHOW_STAT_SUCCESS,
+        payload: {
+          stats: data.defaultStats,
+          monthlyApplications: data.monthlyApplications
+        }
+      });
+    } catch (error) {
+      logOutUser();
+    }
+
+    clearAlert();
+  };
+
+  // Action: Clear search filters
+  const clearFilters = () => {
+    dispatch({ type: CLEAR_FILTER });
+  };
+
+  // Action: Change the current page
+  const changePage = (page) => {
+    dispatch({ type: CHANGE_PAGE, payload: { page } });
+  };
+
+  // Provide the state and actions to the consuming components
+  return (
+    <AppContext.Provider
+      value={{
+        ...state,
+        displayAlert,
+        clearAlert,
+        setupUser,
+        toggleSidebar,
+        logOutUser,
+        updateUser,
+        handleChange,
+        clearValues,
+        createJob,
+        getJob,
+        setEditJob,
+        deleteJob,
+        editJob,
+        showStats,
+        clearFilters,
+        changePage
+      }}
+    >
+      {children}
+    </AppContext.Provider>
+  );
+};
+
+// Custom hook to access the AppContext
+const useAppContext = () => {
+  return useContext(AppContext);
+};
+
+export { AppProvider, initialState, useAppContext };

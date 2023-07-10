@@ -1,32 +1,37 @@
-
 import "express-async-errors"
-import express from "express";
-import morgan from "morgan"
 
-import {dirname} from "path";
-import { fileURLToPath } from "url";
-import path from "path";
-
-import helmet from "helmet"
-import xss from "xss-clean"
 import ExpressMongoSanitize from "express-mongo-sanitize";
+import authRouter from "./routes/authRoutes.js";
+import authenticateUser from "./middleware/auth.js";
+import connectDB from './db/connect.js';
+import {dirname} from "path";
+import dotenv from "dotenv";
+import errorHandlerMiddleWare from "./middleware/error_handler.js";
+import express from "express";
+import { fileURLToPath } from "url";
+import helmet from "helmet"
+import jobRouter from "./routes/jobRoutes.js";
+import morgan from "morgan"
+import notFoundMiddleware from "./middleware/not_found.js";
+import path from "path";
+import xss from "xss-clean"
 
 const app=express();
 
 
-import dotenv from "dotenv";
+
 dotenv.config();
 
 //db and authenticate user
-import connectDB from './db/connect.js';
-//routers
-import authRouter from "./routes/authRoutes.js";
 
-import jobRouter from "./routes/jobRoutes.js";
+//routers
+
+
+
 // middleWare
-import authenticateUser from "./middleware/auth.js";
-import notFoundMiddleware from "./middleware/not_found.js";
-import errorHandlerMiddleWare from "./middleware/error_handler.js";
+
+
+
 
 
 if (process.env.NODE_ENV !== "production"){

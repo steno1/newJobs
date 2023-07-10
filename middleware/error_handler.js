@@ -16,7 +16,7 @@ const errorHandlerMiddleWare=(err, req, res, next)=>{
         defaultError.statusCode=StatusCodes.BAD_REQUEST;
        // defaultError.msg=err.message
 defaultError.msg=Object.values(err.errors).map
-((item)=>item.message).join("")
+((item)=>item.message).join(", ")
 /*iterate the msg array, map out all the object and return message
 object and join them as one string */
     }

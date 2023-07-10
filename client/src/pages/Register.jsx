@@ -76,6 +76,7 @@ if(user){
   setTimeout(()=>{
     navigate("/")
   }, 3000)
+  /*if user is present, navigate to home page */
  
 }
   }, [user, navigate]) 
