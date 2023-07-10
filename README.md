@@ -1,22 +1,24 @@
-App Documentation
+// you can view this site at https://findjobs.onrender.com/
+   App Documentation
 
-Introduction
+   Introduction
 
 This documentation provides an overview of findJobApp, including its features, functionality, and technical implementation.
 The app allows users to create and manage profiles, add job listings, view their own job listings, search for jobs, and track job statistics.
 It includes authentication and security features, utilizes context API for state management, and employs various libraries and technologies for enhanced functionality.
 
-Table of Contents
-Requirements
-Installation
-Architecture
-Features
-API Endpoints
-Authentication
-Error Handling
-Pagination
-Security
-State Management
+   Table of Contents
+   Requirements.
+   Installation.
+   Architecture.
+   Features.
+   API Endpoints.
+   Authentication.
+   Error Handling.
+   Pagination.
+   Security.
+   State Management.
+   
 Requirements;
 To run the application, ensure you have the following dependencies installed:
 
@@ -24,6 +26,7 @@ Node.js (v12 or higher)
 MongoDB
 
 Installation;
+
 Clone the repository from GitHub.
 Navigate to the project root directory.
 Install the required dependencies by running the following command:
@@ -33,13 +36,13 @@ PORT=3000
 MONGODB_URI=mongodb://localhost:27017/your-database-name
 JWT_SECRET=your-jwt-secret
 Ensure you replace your-database-name with the name of your MongoDB database and your-jwt-secret with a secure secret key.
-
 Start the application by running the following command:
 
 npm start
 The application will be accessible at http://localhost:3000.
 
 Architecture;
+
 The application follows a client-server architecture, with the frontend built using React and the backend implemented with Node.js and MongoDB.
 The frontend communicates with the backend via a set of RESTful API endpoints.
 
@@ -53,6 +56,7 @@ client/: Contains the React frontend code.
 /middleware/: Contains error handling middleware.
 
 Features;
+
 The application offers the following features:
 
 User Management:
